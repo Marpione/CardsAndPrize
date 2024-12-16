@@ -9,6 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6eae722022c110b43882c3d68edfcef0, type: 3}
-  m_Name: Test Card
+  m_Script: {fileID: 11500000, guid: 7897053a563f0f945b2e62d4821ca935, type: 3}
+  m_Name: DefaultCardGridConfig
   m_EditorClassIdentifier: 
+  _cellSize: {x: 100, y: 100}
+  _spacing: {x: 10, y: 10}
+  _cellPrefab: {fileID: 1699874822982067248, guid: 0097e771ace6901408eceb4670cdbf97, type: 3}
+  _items: []
