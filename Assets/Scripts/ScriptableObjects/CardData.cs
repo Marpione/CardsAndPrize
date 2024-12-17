@@ -10,7 +10,8 @@ public class CardData : ScriptableObject
 {
     [SerializeField]
     private string _cardName;
-    private Guid _id = Guid.NewGuid();
+    [SerializeField, ReadOnly]
+    private string _id;
     [SerializeField]
     private Sprite _cardIcon;
     [SerializeField]
@@ -24,9 +25,40 @@ public class CardData : ScriptableObject
 
 
     public string CardName => _cardName;
-    public Guid Id => _id;
+    public string Id
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(_id))
+            {
+                _id = Guid.NewGuid().ToString();
+            }
+            return _id;
+        }
+    }
     public Sprite CardIcon => _cardIcon;
     public Sprite CardClosedIcon => _cardClosedIcon;
     public float CardHideDelay => _cardHideDelay;
     public Sprite CardBackSprite => _cardBackSprite;
+
+    private void OnValidate()
+    {
+        if (string.IsNullOrEmpty(_id))
+        {
+            GenerateNewId();
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (string.IsNullOrEmpty(_id))
+        {
+            GenerateNewId();
+        }
+    }
+
+    private void GenerateNewId()
+    {
+        _id = Guid.NewGuid().ToString();
+    }
 }

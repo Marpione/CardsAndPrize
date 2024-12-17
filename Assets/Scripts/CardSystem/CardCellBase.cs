@@ -17,6 +17,7 @@ public abstract class CardCellBase : MonoBehaviour, ICardCell, IPointerClickHand
     private CanvasGroup _canvasGroup;
     protected CanvasGroup CanvasGroup => _canvasGroup??= GetComponent<CanvasGroup>();
 
+    public bool IsMatched { get; set; }
 
     [SerializeField]
     private Transform _container;
@@ -26,7 +27,6 @@ public abstract class CardCellBase : MonoBehaviour, ICardCell, IPointerClickHand
     private Image _cardIconImage;
 
 
-    private bool _isMatched;
     private CardMatchProcessor _matchProcessor;
 
     public void Initialize(CardData cardData, CardMatchProcessor cardMatchProcessor)
@@ -38,14 +38,13 @@ public abstract class CardCellBase : MonoBehaviour, ICardCell, IPointerClickHand
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (_isMatched) return;
+        if (IsMatched) return;
 
         if (!IsProcessing && _matchProcessor != null)
         {
             IsProcessing = true;
             ShowCard();
             _matchProcessor.ProcessCard(this);
-            Debug.Log($"Card being Processed {CardData.CardName} isProcessing {IsProcessing}");
         }
     }
 
@@ -63,8 +62,14 @@ public abstract class CardCellBase : MonoBehaviour, ICardCell, IPointerClickHand
 
     public void LockCard()
     {
-        _isMatched = true;
+        IsMatched = true;
         PlayMatchAnimation();
+    }
+    public void DisableCard()
+    {
+        CanvasGroup.interactable = false;
+        CanvasGroup.blocksRaycasts = false;
+        CanvasGroup.alpha = 0;
     }
 
     //This could go into another class for animations but I want to keep it simple for the demo
@@ -76,12 +81,5 @@ public abstract class CardCellBase : MonoBehaviour, ICardCell, IPointerClickHand
             .Append(_container.DOPunchScale(Vector2.one * 0.2f, 0.4f, 5))
             .Append(_container.DOScale(Vector2.zero, 0.3f))
             .AppendCallback(DisableCard);
-    }
-
-    private void DisableCard()
-    {
-        CanvasGroup.interactable = false;
-        CanvasGroup.blocksRaycasts = false;
-        CanvasGroup.alpha = 0;
     }
 }
