@@ -8,6 +8,8 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CanvasGroup))]
 public abstract class CardCellBase : MonoBehaviour, ICardCell, IPointerClickHandler
 {
+    private const string cardFlipSoundId = "CardFlipSound";
+
     [SerializeField]
     private CardData _cardData;
     public CardData CardData { get { return _cardData; } }
@@ -19,6 +21,8 @@ public abstract class CardCellBase : MonoBehaviour, ICardCell, IPointerClickHand
 
     public bool IsMatched { get; set; }
 
+    [SerializeField]
+    private StringEventChannel _audioEvent;
     [SerializeField]
     private Transform _container;
     [SerializeField]
@@ -32,7 +36,8 @@ public abstract class CardCellBase : MonoBehaviour, ICardCell, IPointerClickHand
     public void Initialize(CardData cardData)
     {
         _cardData = cardData;
-        HideCard();
+        _cardBackgroundImage.sprite = _cardData.CardBackSprite;
+        _cardIconImage.sprite = _cardData.CardClosedIcon;
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -51,12 +56,15 @@ public abstract class CardCellBase : MonoBehaviour, ICardCell, IPointerClickHand
     {
         _cardBackgroundImage.sprite = _cardData._cardFrontSprite;
         _cardIconImage.sprite = _cardData.CardIcon;
+        _audioEvent.RaiseEvent(cardFlipSoundId);
     }
 
     public void HideCard()
     {
         _cardBackgroundImage.sprite = _cardData.CardBackSprite;
         _cardIconImage.sprite = _cardData.CardClosedIcon;
+        _audioEvent.RaiseEvent(cardFlipSoundId);
+
     }
 
     public void LockCard()

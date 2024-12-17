@@ -9,8 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80a1e681e84739f45bcf70bd7ad92582, type: 3}
-  m_Name: CardMatchProcessor
+  m_Script: {fileID: 11500000, guid: bebc636065e4a4a4b9c74a91b08c44e3, type: 3}
+  m_Name: PlayAudioEvent
   m_EditorClassIdentifier: 
-  _scoreManager: {fileID: 11400000, guid: c995657b1b117bf44bcbdd47125afd4b, type: 2}
-  _audioEvent: {fileID: 11400000, guid: 3f66b2240bd7e1c499227b5e978d0340, type: 2}
