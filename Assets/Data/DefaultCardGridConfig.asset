@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7897053a563f0f945b2e62d4821ca935, type: 3}
   m_Name: DefaultCardGridConfig
   m_EditorClassIdentifier: 
-  _gridSize: {x: 2, y: 4}
+  _gridSize: {x: 4, y: 2}
   _cellSize: {x: 150, y: 200}
   _spacing: {x: 10, y: 10}
   _cellPrefab: {fileID: 1699874822982067248, guid: 0097e771ace6901408eceb4670cdbf97, type: 3}
