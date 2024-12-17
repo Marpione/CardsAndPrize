@@ -61,6 +61,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cardData: {fileID: 0}
+  _audioEvent: {fileID: 11400000, guid: 3f66b2240bd7e1c499227b5e978d0340, type: 2}
   _container: {fileID: 1859455754257823859}
   _cardBackgroundImage: {fileID: 7375355896706536451}
   _cardIconImage: {fileID: 2237454568202850725}

@@ -6,12 +6,17 @@ using UnityEngine;
 
 public class CardMatchProcessor : ScriptableObject
 {
+    private const string cardMatchingSoundId = "MatchingSound";
+    private const string cardMissMatchingSoundId = "MissMatchingSound";
+
     private ICardCell _waitingCard;
     private readonly List<Task> _activeProcesses = new();
     private readonly object _lock = new();
 
     [SerializeField]
     private ScoreManager _scoreManager;
+    [SerializeField]
+    private StringEventChannel _audioEvent;
 
 
     public void ProcessCard(ICardCell card)
@@ -50,6 +55,7 @@ public class CardMatchProcessor : ScriptableObject
             first.LockCard();
             second.LockCard();
             _scoreManager.AddScore(1);
+            _audioEvent.RaiseEvent(cardMatchingSoundId);
         }
 
         
@@ -57,6 +63,7 @@ public class CardMatchProcessor : ScriptableObject
         {
             first.HideCard();
             second.HideCard();
+            _audioEvent.RaiseEvent(cardMissMatchingSoundId);
         }
 
         first.IsProcessing = second.IsProcessing = false;
