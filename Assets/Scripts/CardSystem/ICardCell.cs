@@ -4,9 +4,9 @@ using UnityEngine;
 
 public interface ICardCell : IGridCell<CardData, CardMatchProcessor>
 {
-    public CardData CardData { get; }
+    CardData CardData { get; }
     bool IsProcessing { get; set; }
-    bool IsMatched { get; set; }
-    public void ShowCard();
-    public void HideCard();
+    void LockCard();
+    void ShowCard();
+    void HideCard();
 }

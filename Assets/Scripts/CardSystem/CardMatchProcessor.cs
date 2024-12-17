@@ -34,18 +34,22 @@ public class CardMatchProcessor
 
     private async Task ProcessMatch(ICardCell first, ICardCell second)
     {
-        first.IsProcessing = second.IsProcessing = true;
         await Task.Delay(1000);
 
         bool isMatch = first.CardData.Id == second.CardData.Id;
+
+        if (isMatch)
+        {
+            first.LockCard();
+            second.LockCard();
+        }
+
+        
         if (!isMatch)
         {
             first.HideCard();
             second.HideCard();
         }
-
-        first.IsMatched = true;
-        second.IsMatched = true;
 
         first.IsProcessing = second.IsProcessing = false;
     }
