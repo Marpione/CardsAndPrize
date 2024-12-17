@@ -6,8 +6,9 @@ using UnityEngine;
 
 public class CardMatchProcessor : ScriptableObject
 {
-    private const string cardMatchingSoundId = "MatchingSound";
-    private const string cardMissMatchingSoundId = "MissMatchingSound";
+    private const string CardMatchingSoundId = "MatchingSound";
+    private const string CardMissMatchingSoundId = "MissMatchingSound";
+    private const string GameOverSoundId = "GameOverSound";
 
     private ICardCell _waitingCard;
     private readonly List<Task> _activeProcesses = new();
@@ -17,6 +18,17 @@ public class CardMatchProcessor : ScriptableObject
     private ScoreManager _scoreManager;
     [SerializeField]
     private StringEventChannel _audioEvent;
+
+    [SerializeField]
+    private VoidEventChannel _onGameOver;
+    private int _totalPairs;
+    private int _matchedPairs;
+
+    public void Initialize(int totalPairs)
+    {
+        _totalPairs = totalPairs;
+        _matchedPairs = 0;
+    }
 
 
     public void ProcessCard(ICardCell card)
@@ -44,26 +56,33 @@ public class CardMatchProcessor : ScriptableObject
 
     private async Task ProcessMatch(ICardCell first, ICardCell second)
     {
+        first.IsProcessing = second.IsProcessing = true;
         await Task.Delay(1000);
 
-
         bool isMatch = first.CardData.Id == second.CardData.Id;
-
+        first.IsMatched = second.IsMatched = isMatch;
 
         if (isMatch)
         {
+            _scoreManager.AddScore(1);
+            _matchedPairs++;
             first.LockCard();
             second.LockCard();
-            _scoreManager.AddScore(1);
-            _audioEvent.RaiseEvent(cardMatchingSoundId);
-        }
+            _audioEvent.RaiseEvent(CardMatchingSoundId);
 
-        
-        if (!isMatch)
+            if (_matchedPairs >= _totalPairs)
+            {
+                await Task.Delay(500);
+                _onGameOver.RaiseEvent();
+                _audioEvent.RaiseEvent(GameOverSoundId);
+            }
+        }
+        else
         {
             first.HideCard();
             second.HideCard();
-            _audioEvent.RaiseEvent(cardMissMatchingSoundId);
+            _audioEvent.RaiseEvent(CardMissMatchingSoundId);
+
         }
 
         first.IsProcessing = second.IsProcessing = false;
