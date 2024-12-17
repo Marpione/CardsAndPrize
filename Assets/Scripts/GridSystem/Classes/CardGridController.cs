@@ -22,19 +22,22 @@ public class CardGridController : GridControllerBase<CardData, ICardCell, CardGr
 
     private void OnEnable()
     {
-        _onGameStart.OnEventRaised += StartNewGame;
+        _onGameStart.OnEventRaised += Initialize;
     }
 
     private void OnDisable()
     {
-        _onGameStart.OnEventRaised -= StartNewGame;
-        SaveLoadManager.SaveGame(Cells);
+        _onGameStart.OnEventRaised -= Initialize;
+        //Better to do this in something like GameManager
+        SaveLoadManager.SaveGame(Cells, _scoreManager);
     }
 
     public override void Initialize()
     {
+        ClearBoard();
+        _cardMatchProcessor.Initialize(GridConfig.GridSize.x * GridConfig.GridSize.y / 2);
         var saveData = SaveLoadManager.LoadGame();
-        if (saveData != null)
+        if (saveData != null && !IsAllCardsMatchedInSave(saveData))
         {
             InitializeFromSave(saveData);
         }
@@ -42,21 +45,20 @@ public class CardGridController : GridControllerBase<CardData, ICardCell, CardGr
         {
             InitializeRandomGrid();
         }
-    }
 
-    private void StartNewGame()
-    {
-        ClearBoard();
-        InitializeRandomGrid();
-        _cardMatchProcessor.Initialize(GridConfig.GridSize.x * GridConfig.GridSize.y / 2);
     }
 
     private void InitializeFromSave(GameSaveData saveData)
     {
         ConfigureGridLayout();
         ScaleCards();
-        InstantiateCards(saveData.originalCards);
+        InstantiateCards(saveData.OriginalCards);
         RestoreGameState(saveData);
+    }
+
+    private bool IsAllCardsMatchedInSave(GameSaveData saveData)
+    {
+        return saveData.MatchedPairs.Count == saveData.OriginalCards.Count;
     }
 
     private void InitializeRandomGrid()
@@ -110,7 +112,7 @@ public class CardGridController : GridControllerBase<CardData, ICardCell, CardGr
     {
         foreach (var cell in Cells)
         {
-            var matchData = saveData.matchedPairs.FirstOrDefault(m =>
+            var matchData = saveData.MatchedPairs.FirstOrDefault(m =>
                 m.cardId == cell.CardData.Id.ToString());
 
             if (matchData != null)

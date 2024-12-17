@@ -27,7 +27,9 @@ public class CardMatchProcessor : ScriptableObject
     public void Initialize(int totalPairs)
     {
         _totalPairs = totalPairs;
-        _matchedPairs = 0;
+
+        var savedData = SaveLoadManager.LoadGame();
+        _matchedPairs = savedData?.MatchedPairs.Count / 2 ?? 0;
     }
 
 
@@ -75,6 +77,8 @@ public class CardMatchProcessor : ScriptableObject
                 await Task.Delay(500);
                 _onGameOver.RaiseEvent();
                 _audioEvent.RaiseEvent(GameOverSoundId);
+                //This is not good. I would find a better way with time.
+                PlayerPrefs.DeleteKey(SaveLoadManager.SAVE_KEY);
             }
         }
         else

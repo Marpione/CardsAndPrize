@@ -4,17 +4,15 @@ using UnityEngine;
 public class UIScoreController : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _scoreText;
-    private IScoreSystem _scoreSystem;
 
     [SerializeField] private ScoreManager _scoreManager;
 
     private void OnEnable() => _scoreManager.OnScoreChanged += UpdateScore;
     private void OnDisable() => _scoreManager.OnScoreChanged -= UpdateScore;
 
-    public void Initialize(IScoreSystem scoreSystem)
+    private void Start()
     {
-        _scoreSystem = scoreSystem;
-        UpdateScore(_scoreSystem.Score);
+        UpdateScore(_scoreManager.Score);
     }
 
     private void UpdateScore(int score)
