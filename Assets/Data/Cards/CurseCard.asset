@@ -16,5 +16,5 @@ MonoBehaviour:
   _cardIcon: {fileID: -606357570, guid: 080cb6d98b00c2645b2c41df5f69bc78, type: 3}
   _cardClosedIcon: {fileID: 21300000, guid: 99df50a8edf961e4297c1f3f54a37c68, type: 3}
   _cardHideDelay: 1
-  _cardFrontSprite: {fileID: 21300000, guid: 0806beeda0598ce43bb0a2b5a9fcd32a, type: 3}
-  _cardBackSprite: {fileID: 21300000, guid: 24491f3a6110060409102d4ef0f382a3, type: 3}
+  _cardFrontSprite: {fileID: 436545571, guid: 6d1a2570067e3ae4cb5c72a2bca3b8d5, type: 3}
+  _cardBackSprite: {fileID: 1604159000, guid: 6d1a2570067e3ae4cb5c72a2bca3b8d5, type: 3}

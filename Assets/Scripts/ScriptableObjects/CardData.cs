@@ -10,7 +10,7 @@ public class CardData : ScriptableObject
 {
     [SerializeField]
     private string _cardName;
-    private Guid _id;
+    private Guid _id = Guid.NewGuid();
     [SerializeField]
     private Sprite _cardIcon;
     [SerializeField]
@@ -24,11 +24,7 @@ public class CardData : ScriptableObject
 
 
     public string CardName => _cardName;
-    public Guid Id
-    {
-        get => _id;
-        private set => _id = _id == Guid.Empty ? Guid.NewGuid() : _id;
-    }
+    public Guid Id => _id;
     public Sprite CardIcon => _cardIcon;
     public Sprite CardClosedIcon => _cardClosedIcon;
     public float CardHideDelay => _cardHideDelay;
