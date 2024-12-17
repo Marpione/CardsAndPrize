@@ -5,11 +5,10 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(GridLayoutGroup))]
 public abstract class GridControllerBase<TData, TCell, TConfig, TProcessor> : MonoBehaviour, IGridController<TConfig, TData>
- where TCell : class, IGridCell<TData, TProcessor>
+ where TCell : class, IGridCell<TData>
  where TConfig : GridConfig<TData>
 {
     [SerializeField] protected TConfig _gridConfig;
-    protected TProcessor _processor;
     public TConfig GridConfig => _gridConfig;
     protected GridLayoutGroup GridLayout => GetComponent<GridLayoutGroup>();
     protected readonly List<TCell> Cells = new();
@@ -32,7 +31,7 @@ public abstract class GridControllerBase<TData, TCell, TConfig, TProcessor> : Mo
         {
             var cellObject = Instantiate(GridConfig.CellPrefab, transform);
             var cell = cellObject.GetInterfaceComponent<TCell>();
-            cell.Initialize(item, _processor);
+            cell.Initialize(item);
             Cells.Add(cell);
         }
     }
@@ -46,19 +45,16 @@ public abstract class GridControllerBase<TData, TCell, TConfig, TProcessor> : Mo
         float cardBaseWidth = (containerWidth - (GridConfig.GridSize.x - 1) * GridLayout.spacing.x) / GridConfig.GridSize.x;
         float cardBaseHeight = (containerHeight - (GridConfig.GridSize.y - 1) * GridLayout.spacing.y) / GridConfig.GridSize.y;
 
-        // Aspect ratio of the card (width:height)
-        float targetAspectRatio = 0.6f; // Adjust this value to match your card's desired aspect ratio
+        float targetAspectRatio = 0.6f; 
 
         float cardWidth, cardHeight;
         if (cardBaseWidth / cardBaseHeight > targetAspectRatio)
         {
-            // Width is too large for desired ratio, base on height
             cardHeight = cardBaseHeight * _cardScalePercentage;
             cardWidth = cardHeight * targetAspectRatio;
         }
         else
         {
-            // Height is too large for desired ratio, base on width
             cardWidth = cardBaseWidth * _cardScalePercentage;
             cardHeight = cardWidth / targetAspectRatio;
         }

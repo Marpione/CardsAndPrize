@@ -64,6 +64,7 @@ MonoBehaviour:
   _container: {fileID: 1859455754257823859}
   _cardBackgroundImage: {fileID: 7375355896706536451}
   _cardIconImage: {fileID: 2237454568202850725}
+  _matchProcessor: {fileID: 11400000, guid: 26e5430bdfe95b14690106dde80392a5, type: 2}
 --- !u!114 &2723001788618788798
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -26,13 +26,12 @@ public abstract class CardCellBase : MonoBehaviour, ICardCell, IPointerClickHand
     [SerializeField]
     private Image _cardIconImage;
 
-
+    [SerializeField]
     private CardMatchProcessor _matchProcessor;
 
-    public void Initialize(CardData cardData, CardMatchProcessor cardMatchProcessor)
+    public void Initialize(CardData cardData)
     {
         _cardData = cardData;
-        _matchProcessor = cardMatchProcessor;
         HideCard();
     }
 

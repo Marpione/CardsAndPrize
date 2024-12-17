@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80a1e681e84739f45bcf70bd7ad92582, type: 3}
+  m_Name: CardMatchProcessor
+  m_EditorClassIdentifier: 
+  _scoreManager: {fileID: 11400000, guid: c995657b1b117bf44bcbdd47125afd4b, type: 2}
