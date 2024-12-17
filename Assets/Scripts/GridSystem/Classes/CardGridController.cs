@@ -3,15 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class CardGridController : GridControllerBase<CardData, ICardCell, CardGridConfig, CardMatchProcessor>
 {
-    private CardMatchProcessor _matchProcessor = new();
-
+    [SerializeField] private ScoreManager _scoreManager;
 
     void OnDisable() => SaveLoadManager.SaveGame(Cells);
 
@@ -70,7 +71,7 @@ public class CardGridController : GridControllerBase<CardData, ICardCell, CardGr
         {
             var cellObject = Instantiate(GridConfig.CellPrefab, transform);
             var cell = cellObject.GetComponent<ICardCell>();
-            cell.Initialize(card, _matchProcessor);
+            cell.Initialize(card);
             Cells.Add(cell);
         }
     }

@@ -1,13 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class CardMatchProcessor
+public class CardMatchProcessor : ScriptableObject
 {
     private ICardCell _waitingCard;
     private readonly List<Task> _activeProcesses = new();
     private readonly object _lock = new();
+
+    [SerializeField]
+    private ScoreManager _scoreManager;
+
 
     public void ProcessCard(ICardCell card)
     {
@@ -36,12 +41,15 @@ public class CardMatchProcessor
     {
         await Task.Delay(1000);
 
+
         bool isMatch = first.CardData.Id == second.CardData.Id;
+
 
         if (isMatch)
         {
             first.LockCard();
             second.LockCard();
+            _scoreManager.AddScore(1);
         }
 
         

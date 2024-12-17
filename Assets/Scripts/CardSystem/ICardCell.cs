@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface ICardCell : IGridCell<CardData, CardMatchProcessor>
+public interface ICardCell : IGridCell<CardData>
 {
     CardData CardData { get; }
     bool IsProcessing { get; set; }
