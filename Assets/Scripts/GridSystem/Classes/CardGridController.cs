@@ -12,9 +12,24 @@ using UnityEngine.UI;
 
 public class CardGridController : GridControllerBase<CardData, ICardCell, CardGridConfig, CardMatchProcessor>
 {
-    [SerializeField] private ScoreManager _scoreManager;
+    [SerializeField]
+    private VoidEventChannel _onGameStart;
 
-    void OnDisable() => SaveLoadManager.SaveGame(Cells);
+    [SerializeField] 
+    private ScoreManager _scoreManager;
+    [SerializeField] 
+    private CardMatchProcessor _cardMatchProcessor;
+
+    private void OnEnable()
+    {
+        _onGameStart.OnEventRaised += StartNewGame;
+    }
+
+    private void OnDisable()
+    {
+        _onGameStart.OnEventRaised -= StartNewGame;
+        SaveLoadManager.SaveGame(Cells);
+    }
 
     public override void Initialize()
     {
@@ -27,6 +42,13 @@ public class CardGridController : GridControllerBase<CardData, ICardCell, CardGr
         {
             InitializeRandomGrid();
         }
+    }
+
+    private void StartNewGame()
+    {
+        ClearBoard();
+        InitializeRandomGrid();
+        _cardMatchProcessor.Initialize(GridConfig.GridSize.x * GridConfig.GridSize.y / 2);
     }
 
     private void InitializeFromSave(GameSaveData saveData)
@@ -99,5 +121,14 @@ public class CardGridController : GridControllerBase<CardData, ICardCell, CardGr
                 cell.DisableCard();
             }
         }
+    }
+
+    protected override void ClearBoard()
+    {
+        foreach (var cell in Cells)
+        {
+            Destroy(cell.GetComponent<Transform>().gameObject);
+        }
+        base.ClearBoard();
     }
 }

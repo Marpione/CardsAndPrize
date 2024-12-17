@@ -17,8 +17,6 @@ public abstract class GridControllerBase<TData, TCell, TConfig, TProcessor> : Mo
     [SerializeField] private float _cardScalePercentage = 0.9f;
 
 
-    protected virtual void Start() => Initialize();
-
     public virtual void Initialize()
     {
         GridLayout.cellSize = GridConfig.CellSize;
@@ -60,5 +58,9 @@ public abstract class GridControllerBase<TData, TCell, TConfig, TProcessor> : Mo
         }
 
         GridLayout.cellSize = new Vector2(cardWidth, cardHeight);
+    }
+    protected virtual void ClearBoard()
+    {
+        Cells.Clear();
     }
 }

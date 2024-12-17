@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scoreManager: {fileID: 11400000, guid: c995657b1b117bf44bcbdd47125afd4b, type: 2}
   _audioEvent: {fileID: 11400000, guid: 3f66b2240bd7e1c499227b5e978d0340, type: 2}
+  _onGameOver: {fileID: 11400000, guid: f76e92ddb31baac4aa76a288ba1698b0, type: 2}
