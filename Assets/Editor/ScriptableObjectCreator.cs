@@ -3,6 +3,7 @@ using UnityEditor;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.IO;
 
 public class ScriptableObjectCreator : EditorWindow
 {
@@ -11,8 +12,6 @@ public class ScriptableObjectCreator : EditorWindow
     private Type selectedType;
     private string fileName = "";
     private string selectedPath = "Assets";
-
-    private static List<Type> cachedTypes;
     private List<Type> filteredTypes;
     private string lastSearchQuery = "";
     private bool needsRepaint;
@@ -20,33 +19,50 @@ public class ScriptableObjectCreator : EditorWindow
     [MenuItem("Tools/Scriptable Object Creator")]
     public static void ShowWindow()
     {
-        GetWindow<ScriptableObjectCreator>("SO Creator");
+        var window = GetWindow<ScriptableObjectCreator>("SO Creator");
+        window.OnEnable();
     }
 
     [MenuItem("Assets/Create/Scriptable Objects", priority = 0)]
     private static void CreateFromContextMenu()
     {
-        string path = GetSelectedPath();
-        ScriptableObjectCreator window = GetWindow<ScriptableObjectCreator>("SO Creator");
-        window.selectedPath = path;
+        var window = GetWindow<ScriptableObjectCreator>("SO Creator");
+        window.selectedPath = GetSelectedPath();
+        window.OnEnable();
     }
 
     private void OnEnable()
     {
-        if (cachedTypes == null)
-        {
-            CacheScriptableObjectTypes();
-        }
-        filteredTypes = cachedTypes;
+        CacheScriptableObjectTypes();
+        filteredTypes = GetScriptableObjectTypes().ToList();
+        searchQuery = "";
+        lastSearchQuery = "";
+        needsRepaint = true;
     }
 
-    private static void CacheScriptableObjectTypes()
+    private static List<Type> GetScriptableObjectTypes()
     {
-        cachedTypes = AppDomain.CurrentDomain.GetAssemblies()
+        return AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(assembly => assembly.GetTypes())
             .Where(type => type.IsSubclassOf(typeof(ScriptableObject)) && !type.IsAbstract)
             .OrderBy(type => type.Name)
             .ToList();
+    }
+
+    private void CacheScriptableObjectTypes()
+    {
+        EditorApplication.projectChanged += OnProjectChanged;
+    }
+
+    private void OnProjectChanged()
+    {
+        filteredTypes = GetScriptableObjectTypes().ToList();
+        needsRepaint = true;
+    }
+
+    private void OnDisable()
+    {
+        EditorApplication.projectChanged -= OnProjectChanged;
     }
 
     private static string GetSelectedPath()
@@ -56,9 +72,9 @@ public class ScriptableObjectCreator : EditorWindow
         foreach (UnityEngine.Object obj in Selection.GetFiltered(typeof(UnityEngine.Object), SelectionMode.Assets))
         {
             path = AssetDatabase.GetAssetPath(obj);
-            if (!string.IsNullOrEmpty(path) && System.IO.File.Exists(path))
+            if (!string.IsNullOrEmpty(path) && File.Exists(path))
             {
-                path = System.IO.Path.GetDirectoryName(path);
+                path = Path.GetDirectoryName(path);
             }
             break;
         }
@@ -68,7 +84,6 @@ public class ScriptableObjectCreator : EditorWindow
     private void OnGUI()
     {
         EditorGUI.BeginChangeCheck();
-
         DrawSearchBar();
 
         if (EditorGUI.EndChangeCheck() || needsRepaint)
@@ -94,12 +109,12 @@ public class ScriptableObjectCreator : EditorWindow
             lastSearchQuery = searchQuery;
             if (string.IsNullOrEmpty(searchQuery))
             {
-                filteredTypes = cachedTypes;
+                filteredTypes = GetScriptableObjectTypes().ToList();
             }
             else
             {
                 string lowerQuery = searchQuery.ToLower();
-                filteredTypes = cachedTypes
+                filteredTypes = GetScriptableObjectTypes()
                     .Where(type => type.Name.ToLower().Contains(lowerQuery))
                     .ToList();
             }
@@ -111,7 +126,6 @@ public class ScriptableObjectCreator : EditorWindow
     {
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Select Type", EditorStyles.boldLabel);
-
         scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 
         foreach (var type in filteredTypes)
@@ -132,8 +146,6 @@ public class ScriptableObjectCreator : EditorWindow
     private void DrawCreationControls()
     {
         EditorGUILayout.Space();
-
-        EditorGUI.BeginChangeCheck();
         fileName = EditorGUILayout.TextField("File Name", fileName);
 
         if (GUILayout.Button("Select Path"))
@@ -156,22 +168,33 @@ public class ScriptableObjectCreator : EditorWindow
         }
         GUI.enabled = true;
     }
-
     private void CreateScriptableObject()
     {
         if (selectedType == null || string.IsNullOrEmpty(fileName)) return;
 
         var asset = ScriptableObject.CreateInstance(selectedType);
         string assetPath = $"{selectedPath}/{fileName}.asset";
-
         assetPath = AssetDatabase.GenerateUniqueAssetPath(assetPath);
 
         AssetDatabase.CreateAsset(asset, assetPath);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
-        EditorUtility.FocusProjectWindow();
-        Selection.activeObject = asset;
+        var projectBrowserType = Type.GetType("UnityEditor.ProjectBrowser,UnityEditor");
+        if (projectBrowserType != null)
+        {
+            EditorWindow projectWindow = EditorWindow.GetWindow(projectBrowserType);
+            var isLocked = (bool)projectBrowserType.GetProperty("isLocked",
+                System.Reflection.BindingFlags.Public |
+                System.Reflection.BindingFlags.NonPublic |
+                System.Reflection.BindingFlags.Instance)
+                .GetValue(projectWindow);
+
+            if (!isLocked)
+            {
+                Selection.activeObject = asset;
+            }
+        }
 
         fileName = "";
         needsRepaint = true;

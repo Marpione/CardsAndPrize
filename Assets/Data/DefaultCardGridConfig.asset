@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7897053a563f0f945b2e62d4821ca935, type: 3}
+  m_Name: DefaultCardGridConfig
+  m_EditorClassIdentifier: 
+  _cellSize: {x: 100, y: 100}
+  _spacing: {x: 10, y: 10}
+  _cellPrefab: {fileID: 1699874822982067248, guid: 0097e771ace6901408eceb4670cdbf97, type: 3}
+  _items:
+  - {fileID: 11400000, guid: a2e2bc53e371ca743b1a5f0aa91ce472, type: 2}
+  - {fileID: 11400000, guid: 8a66132732b37c947814e1eb9dbf90ef, type: 2}
+  - {fileID: 11400000, guid: 044aebcfff5e95b438ef5f20869f8eb8, type: 2}
+  - {fileID: 11400000, guid: 8ad8390989a333649b166a863077d431, type: 2}
+  - {fileID: 11400000, guid: 777f6683906bcb248a57d216c1429064, type: 2}
